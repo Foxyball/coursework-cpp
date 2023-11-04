@@ -1,0 +1,7 @@
+Reservation Details:
+-------------------
+
+Cost: $200
+Amount Paid: $200
+Balance: $0
+
