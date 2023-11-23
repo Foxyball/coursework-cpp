@@ -3,8 +3,12 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class Room {
 public:
+	int roomNumber;
+
 	Room(int number, double price) {
 		this->roomNumber = number;
 		this->pricePerNight = price;
@@ -13,7 +17,8 @@ public:
 	virtual void display() const = 0;
 	virtual double calculateCost(int nights) const = 0;
 
-	int roomNumber;
+
+
 protected:
 	double pricePerNight;
 };
@@ -23,7 +28,7 @@ public:
 	StandardRoom(int number) : Room(number, 100.0) {}
 
 	void display() const override {
-		std::cout << "Standard Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
+		cout << "Standard Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
 	}
 
 	double calculateCost(int nights) const override {
@@ -36,7 +41,7 @@ public:
 	DeluxeRoom(int number) : Room(number, 150.0) {}
 
 	void display() const override {
-		std::cout << "Deluxe Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
+		cout << "Deluxe Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
 	}
 
 	double calculateCost(int nights) const override {
@@ -52,9 +57,8 @@ public:
 		// Add more rooms as needed
 	}
 
-
 	void displayRooms() const {
-		std::cout << "Available Rooms:\n";
+		cout << "Available Rooms:\n";
 		for (const Room* room : rooms) {
 			room->display();
 		}
@@ -64,28 +68,46 @@ public:
 		for (Room* room : rooms) {
 			if (room->roomNumber == roomNumber) {
 				double cost = room->calculateCost(nights);
+
 				if (cost != 0.0) {
+					string customerName, customerPhone;
+					cout << "Enter customer name: ";
+					cin.ignore();
+					getline(cin, customerName);
+
+					cout << "Enter customer phone number: ";
+					cin >> customerPhone;
+
 					// Add reservation details to the file
-					std::ofstream reservationFile("reservations.txt", std::ios::app);
-					reservationFile << "Room #" << roomNumber << ", Nights: " << nights << ", Cost: $" << cost << "\n";
+					fstream reservationFile;
+					reservationFile.open("reservations.txt", ios::app);
+					if (!reservationFile.is_open()) {
+						cout << "Error: Unable to open file.\n";
+						return 0;
+					}
+					reservationFile << "Room #" << roomNumber << ", Customer: " << customerName
+						<< ", Phone: " << customerPhone << ", Nights: " << nights << ", Cost: $" << cost
+						<< "\n";
 					reservationFile.close();
+
 					return cost;
 				}
 			}
 		}
+
 		return 0.0; // Room not found
 	}
 
 private:
-	std::vector<Room*> rooms;
+	vector<Room*> rooms;
 };
 
 void displayMenu() {
-	std::cout << "Hotel Reservation System\n";
-	std::cout << "1. Display Available Rooms\n";
-	std::cout << "2. Reserve a Room\n";
-	std::cout << "3. Exit\n";
-	std::cout << "Enter your choice: ";
+	cout << "Hotel Reservation System\n";
+	cout << "1. Display Available Rooms\n";
+	cout << "2. Reserve a Room\n";
+	cout << "3. Exit\n";
+	cout << "Enter your choice: ";
 }
 
 int main() {
@@ -95,7 +117,7 @@ int main() {
 		displayMenu();
 
 		int choice;
-		std::cin >> choice;
+		cin >> choice;
 
 		double cost;
 
@@ -106,31 +128,29 @@ int main() {
 
 		case 2:
 			int roomNumber, nights;
-			std::cout << "Enter room number: ";
-			std::cin >> roomNumber;
-			std::cout << "Enter number of nights: ";
-			std::cin >> nights;
+			cout << "Enter room number: ";
+			cin >> roomNumber;
+			cout << "Enter number of nights: ";
+			cin >> nights;
 
-			// Move initialization outside of switch block
 			cost = hotel.reserveRoom(roomNumber, nights);
 
 			if (cost != 0.0) {
-				std::cout << "Room reserved successfully. Total cost: $" << cost << "\n";
+				cout << "Room reserved successfully. Total cost: $" << cost << "\n";
 			}
 			else {
-				std::cout << "Error: Room not found or invalid input.\n";
+				cout << "Error: Room not found or invalid input.\n";
 			}
 			break;
 
 		case 3:
-			std::cout << "Exiting program. Thank you!\n";
+			cout << "Exiting program. Thank you!\n";
 			return 0;
 
 		default:
-			std::cout << "Invalid choice. Please try again.\n";
+			cout << "Invalid choice. Please try again.\n";
 		}
 	}
-
 
 	return 0;
 }
