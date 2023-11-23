@@ -1,136 +1,135 @@
 #include <iostream>
-#include <string>
+#include <fstream>
 #include <vector>
-using namespace std;
+#include <string>
 
-/*
-***************
-* Created by:  *
-* Hristo Sabev *
-* *************
-*/
-
-/*
-This is the base class, that is also an abstract class.
-*/
-class HotelReservation {
+class Room {
 public:
-	virtual void setReservation() = 0;
-	virtual void displayDetails() = 0;
-	virtual double calculateCost() = 0;
-};
-
-
-class Room : public HotelReservation {
-private:
-	int room_id;
-	string room_type;
-	double room_cost;
-	int status; // 0,1
-public:
-	// constructor
-	Room(int room_id, string room_type, int room_cost, int status, int id, string from, string to, int guests_num) : HotelReservation()
-	{
-		this->room_id = room_id;
-		this->room_type = room_type;
-		this->room_cost = room_cost;
-		this->status = status;
+	Room(int number, double price) {
+		this->roomNumber = number;
+		this->pricePerNight = price;
 	}
 
-	void setReservation() override;
-	void displayDetails() override;
-	double calculateCost() override;
+	virtual void display() const = 0;
+	virtual double calculateCost(int nights) const = 0;
+
+	int roomNumber;
+protected:
+	double pricePerNight;
 };
 
-void Room::setReservation() {
-	cout << "Enter room ID: ";
-	cin >> room_id;
-	cout << "Enter room type: ";
-	cin >> room_type;
-	cout << "Enter room cost: ";
-	cin >> room_cost;
-	cout << "Enter room status: ";
-	cin >> status;
-};
-
-void Room::displayDetails() {
-	cout << "Room ID: " << room_id << endl;
-	cout << "Room Type: " << room_type << endl;
-	cout << "Room Cost: " << room_cost << endl;
-	cout << "Room Status: " << status << endl;
-};
-
-double Room::calculateCost() {
-	return room_cost;
-};
-
-class Customer {
-private:
-	string name;
-	string email;
-	string phone;
+class StandardRoom : public Room {
 public:
-	Customer(string name, string email, string phone) {
-		this->name = name;
-		this->email = email;
-		this->phone = phone;
+	StandardRoom(int number) : Room(number, 100.0) {}
+
+	void display() const override {
+		std::cout << "Standard Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
 	}
 
-	void setCustomer();
-	void getCustomer();
+	double calculateCost(int nights) const override {
+		return pricePerNight * nights;
+	}
 };
 
-void Customer::setCustomer() {
+class DeluxeRoom : public Room {
+public:
+	DeluxeRoom(int number) : Room(number, 150.0) {}
 
-	cout << "Enter name: ";
-	cin >> name;
-	cout << "Enter email: ";
-	cin >> email;
-	cout << "Enter phone: ";
-	cin >> phone;
+	void display() const override {
+		std::cout << "Deluxe Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
+	}
+
+	double calculateCost(int nights) const override {
+		return pricePerNight * nights;
+	}
 };
 
-void Customer::getCustomer() {
-	cout << "Customer Name: " << name << endl;
-	cout << "Customer Email: " << email << endl;
-	cout << "Customer Phone: " << phone << endl;
+class Hotel {
+public:
+	Hotel() {
+		rooms.push_back(new StandardRoom(101));
+		rooms.push_back(new DeluxeRoom(201));
+		// Add more rooms as needed
+	}
+
+
+	void displayRooms() const {
+		std::cout << "Available Rooms:\n";
+		for (const Room* room : rooms) {
+			room->display();
+		}
+	}
+
+	double reserveRoom(int roomNumber, int nights) {
+		for (Room* room : rooms) {
+			if (room->roomNumber == roomNumber) {
+				double cost = room->calculateCost(nights);
+				if (cost != 0.0) {
+					// Add reservation details to the file
+					std::ofstream reservationFile("reservations.txt", std::ios::app);
+					reservationFile << "Room #" << roomNumber << ", Nights: " << nights << ", Cost: $" << cost << "\n";
+					reservationFile.close();
+					return cost;
+				}
+			}
+		}
+		return 0.0; // Room not found
+	}
+
+private:
+	std::vector<Room*> rooms;
+};
+
+void displayMenu() {
+	std::cout << "Hotel Reservation System\n";
+	std::cout << "1. Display Available Rooms\n";
+	std::cout << "2. Reserve a Room\n";
+	std::cout << "3. Exit\n";
+	std::cout << "Enter your choice: ";
 }
 
-class Payment {
-private:
-	int payment_id;
-	string payment_type;
-	double amount_paid;
-public:
-	Payment(int payment_id, string payment_type, double amount_paid) {
-		this->payment_id = payment_id;
-		this->payment_type = payment_type;
-		this->amount_paid = amount_paid;
+int main() {
+	Hotel hotel;
+
+	while (true) {
+		displayMenu();
+
+		int choice;
+		std::cin >> choice;
+
+		double cost;
+
+		switch (choice) {
+		case 1:
+			hotel.displayRooms();
+			break;
+
+		case 2:
+			int roomNumber, nights;
+			std::cout << "Enter room number: ";
+			std::cin >> roomNumber;
+			std::cout << "Enter number of nights: ";
+			std::cin >> nights;
+
+			// Move initialization outside of switch block
+			cost = hotel.reserveRoom(roomNumber, nights);
+
+			if (cost != 0.0) {
+				std::cout << "Room reserved successfully. Total cost: $" << cost << "\n";
+			}
+			else {
+				std::cout << "Error: Room not found or invalid input.\n";
+			}
+			break;
+
+		case 3:
+			std::cout << "Exiting program. Thank you!\n";
+			return 0;
+
+		default:
+			std::cout << "Invalid choice. Please try again.\n";
+		}
 	}
-
-	void setPayment();
-	double getPayment();
-};
-
-void Payment::setPayment() {
-	cout << "Enter payment_id: ";
-	cin >> payment_id;
-	cout << "Enter payment_type: ";
-	cin >> payment_type;
-	cout << "Enter amount_paid: ";
-	cin >> amount_paid;
-
-	if (amount_paid < 0) {
-		cout << "Invalid amount paid" << endl;
-	}
-};
-
-double Payment::getPayment() {
-	return amount_paid;
-};
-
-int main()
-{
 
 
 	return 0;
