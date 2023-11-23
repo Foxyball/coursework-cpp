@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// cannot create an instance of an abstract class!!!
 class Room {
 public:
 	int roomNumber;
@@ -16,8 +17,6 @@ public:
 
 	virtual void display() const = 0;
 	virtual double calculateCost(int nights) const = 0;
-
-
 
 protected:
 	double pricePerNight;
@@ -53,6 +52,7 @@ class Hotel {
 public:
 	Hotel() {
 		rooms.push_back(new StandardRoom(101));
+		rooms.push_back(new StandardRoom(102));
 		rooms.push_back(new DeluxeRoom(201));
 		// Add more rooms as needed
 	}
@@ -98,15 +98,30 @@ public:
 		return 0.0; // Room not found
 	}
 
+	//void clearReservations() {
+	//	
+	//	fstream fc;
+	//	fc.open("reservations.txt", ios::trunc);				// TO DO
+	//	if (!fc.is_open()) {
+	//		cout << "Error: Unable to open file.\n";
+	//		return;
+	//	}
+	//	fc.close();
+
+
+	//}
+
 private:
 	vector<Room*> rooms;
 };
 
 void displayMenu() {
-	cout << "Hotel Reservation System\n";
-	cout << "1. Display Available Rooms\n";
-	cout << "2. Reserve a Room\n";
-	cout << "3. Exit\n";
+	cout << "\nMenu:\n";
+	cout << "1. Display Avaliable Rooms.\n";
+	cout << "2. Make a Reservation.\n";
+	cout << "3. Clear Reservations.\n";
+	cout << "-------------------------\n";
+	cout << "4. Exit\n";
 	cout << "Enter your choice: ";
 }
 
@@ -144,6 +159,10 @@ int main() {
 			break;
 
 		case 3:
+			cout<<"Clearing reservations...\n";
+			break;
+
+		case 4:
 			cout << "Exiting program. Thank you!\n";
 			return 0;
 
