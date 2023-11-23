@@ -24,7 +24,10 @@ protected:
 
 class StandardRoom : public Room {
 public:
-	StandardRoom(int number) : Room(number, 100.0) {}
+	StandardRoom(int number) : Room(number,100.0) {
+		this->roomNumber = number;
+		this->pricePerNight = 100.0;
+	}
 
 	void display() const override {
 		cout << "Standard Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
