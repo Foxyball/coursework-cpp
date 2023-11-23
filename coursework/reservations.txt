@@ -1,7 +1,5 @@
-Reservation Details:
--------------------
-
-Cost: $200
-Amount Paid: $200
-Balance: $0
-
+Room #101, Nights: 2, Cost: $200
+Room #101, Customer: Hristo, Phone: Sabev, Nights: 2, Cost: $200
+Room #101, Customer: Hristo, Phone: 0884800809, Nights: 2, Cost: $200
+Room #201, Customer: Hristo Sabev, Phone: 0884800809, Nights: 5, Cost: $750
+Room #201, Customer: Ivan Draganov, Phone: 088312323, Nights: 1, Cost: $150
