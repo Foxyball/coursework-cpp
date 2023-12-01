@@ -1,9 +1,0 @@
-Name: IVAN
-Suma za plashtane: 450
-Info: 
-Name: Ivan
-Suma za plashtane: 75
-Info: 
-Name: ZAPISHI SE V SKAPANIQ FAIL
-Suma za plashtane: 500
-Info: 

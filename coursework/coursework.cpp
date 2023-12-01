@@ -83,7 +83,7 @@ public:
 		}
 		fo << "Ime: " << res->getGuestName() << "\n";
 		fo << "Suma za plashtane: " << res->calculateCost() << "\n";
-		fo << "Info: "; res->displayInfo();
+		fo << "Info: "; res->displayInfo(); //ne raboti
 		fo << "\n";
 		fo.close();
 	}
