@@ -73,7 +73,7 @@ public:
 
 	void listReservations() {
 		if (reservationList.empty()) {
-			cout << "No reservations\n";
+			cout << "Nqma nalichni rezervacii\n";
 		}
 		else {
 			for (int i = 0; i < reservationList.size(); i++) {
@@ -85,7 +85,7 @@ public:
 	double processReservations() {
 		double totalCost = 0;
 		if (reservationList.empty()) {
-			cout << "No reservations to process\n";
+			cout << "Nqma nalichni rezervacii za obrabotka\n";
 		}
 		else {
 			totalCost = reservationList[0]->calculateCost();
@@ -93,30 +93,54 @@ public:
 		}
 		return totalCost;
 	}
+
+	void saveReservations() {
+		fstream fo;
+		fo.open("rezervacii.txt", ios::out);
+		if (fo.is_open()) {
+			for (int i = 0; i < reservationList.size(); i++) {
+				fo << reservationList[i]->calculateCost() << "\n";
+			}
+			fo.close();
+		}
+		else {
+			cout << "Ne moje da se otvori faila\n";
+		}
+
+
+	}
 };
+
+void menu() {
+	cout << "\tMENU\t\n";
+	cout << "1. Add Room Reservation\n";
+	cout << "2. Add Event Reservation\n";
+	cout << "3. List Reservations\n";
+	cout << "4. Process Reservations\n";
+	cout << "0. Exit\n";
+}
 
 int main() {
 	ReservationManager manager;
-	string choice = "";
+	int choice;
 
-	while (choice != "0") {
-		cout << "\tMENU\t\n";
-		cout << "1. Add Room Reservation\n";
-		cout << "2. Add Event Reservation\n";
-		cout << "3. List Reservations\n";
-		cout << "4. Process Reservations\n";
-		cout << "0. Exit\n";
+	while (true) {
+		menu();
+		cout << "Enter your choice: ";
 		cin >> choice;
 
-		cin.ignore('\n', 10);
+		// Convert the choice to an integer for comparison
+		//int choiceInt = stoi(choice);
 
-		if (choice == "1") {
+		switch (choice) {
+		case 1: {
 			string guest;
 			int room;
 			double rate;
 			int nights;
 
 			cout << "Guest: ";
+			cin.ignore();
 			getline(cin, guest);
 			cout << "Room Number: ";
 			cin >> room;
@@ -126,14 +150,15 @@ int main() {
 			cin >> nights;
 
 			manager.addReservation(new RoomReservation(guest, room, rate, nights));
-			cin.ignore('\n', 10);
+			break;
 		}
-		else if (choice == "2") {
+		case 2: {
 			string guest;
 			string event;
 			double cost;
 
 			cout << "Guest: ";
+			cin.ignore();
 			getline(cin, guest);
 			cout << "Event: ";
 			getline(cin, event);
@@ -141,16 +166,30 @@ int main() {
 			cin >> cost;
 
 			manager.addReservation(new EventReservation(guest, event, cost));
-			cin.ignore('\n', 10);
+			break;
 		}
-		else if (choice == "3") {
+		case 3: {
 			manager.listReservations();
+			break;
 		}
-		else if (choice == "4") {
+		case 4: {
 			double totalCost = manager.processReservations();
 			if (totalCost > 0) {
 				cout << "Total Cost of Processed Reservations: " << totalCost << "\n";
 			}
+			break;
+		}
+		case 0: {
+			manager.saveReservations();
+			cout << "Vsicki promeni bqxa uspeshno zapisani.\n";
+			cout<<"Izhod ot programata.\n";
+			return 0;
+		}
+		default: {
+			cout << "Invalid choice. Please enter a valid option.\n";
+			break;
+		}
 		}
 	}
+
 }
