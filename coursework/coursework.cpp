@@ -14,6 +14,11 @@ public:
 
 	virtual double calculateCost() = 0;
 	virtual void displayInfo() = 0;
+
+	// Get the guest name
+	string getGuestName() {
+		return guestName;
+	}
 };
 
 // Derived Classes
@@ -39,7 +44,7 @@ public:
 		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
 	};
 };
-
+// Derived Classes
 class EventReservation : public Reservation {
 private:
 	string eventName;
@@ -60,7 +65,7 @@ public:
 		cout << "Suma za plasthane: " << calculateCost() << "\n";
 	};
 };
-
+// Vector Class
 class ReservationManager {
 private:
 	vector<Reservation*> reservationList;
@@ -69,11 +74,23 @@ public:
 
 	void addReservation(Reservation* res) {
 		reservationList.push_back(res);
+
+		fstream fo;
+		fo.open("rezervacii.txt", ios::out | ios::app);
+		if (!fo.is_open()) {
+			cout << "Ne moje da se otvori faila\n";
+			return;
+		}
+		fo << "Ime: " << res->getGuestName() << "\n";
+		fo << "Suma za plashtane: " << res->calculateCost() << "\n";
+		fo << "Info: "; res->displayInfo();
+		fo << "\n";
+		fo.close();
 	}
 
 	void listReservations() {
 		if (reservationList.empty()) {
-			cout << "No reservations\n";
+			cout << "Nqma nalichni rezervacii\n";
 		}
 		else {
 			for (int i = 0; i < reservationList.size(); i++) {
@@ -85,7 +102,7 @@ public:
 	double processReservations() {
 		double totalCost = 0;
 		if (reservationList.empty()) {
-			cout << "No reservations to process\n";
+			cout << "Nqma nalichni rezervacii za obrabotka\n";
 		}
 		else {
 			totalCost = reservationList[0]->calculateCost();
@@ -95,62 +112,90 @@ public:
 	}
 };
 
+
+
+// Menu
+void menu() {
+	cout << "\tMENU\t\n";
+	cout << "=============================\n";
+	cout << "1. Dobavi rezervaciq\n";
+	cout << "2. Dobavi sabitie\n";
+	cout << "3. Pokaji rezervacii\n";
+	cout << "4. Obrabotka na rezervacii\n";
+	cout << "=============================\n";
+	cout << "0. Izxod\n";
+}
+
 int main() {
 	ReservationManager manager;
-	string choice = "";
+	int choice;
 
-	while (choice != "0") {
-		cout << "\tMENU\t\n";
-		cout << "1. Add Room Reservation\n";
-		cout << "2. Add Event Reservation\n";
-		cout << "3. List Reservations\n";
-		cout << "4. Process Reservations\n";
-		cout << "0. Exit\n";
+	while (true) {
+		menu();
+		cout << "Izberete: ";
 		cin >> choice;
 
-		cin.ignore('\n', 10);
-
-		if (choice == "1") {
+		switch (choice) {
+		case 1: {
 			string guest;
 			int room;
-			double rate;
+			double price;
 			int nights;
 
-			cout << "Guest: ";
+			cout << "Ime: ";
+			cin.ignore();
 			getline(cin, guest);
-			cout << "Room Number: ";
+			cout << "Staq: ";
 			cin >> room;
-			cout << "Nightly Rate: ";
-			cin >> rate;
-			cout << "Number of Nights: ";
+			cout << "Suma za plashtane: ";
+			cin >> price;
+			cout << "Dni prestoi: ";
 			cin >> nights;
 
-			manager.addReservation(new RoomReservation(guest, room, rate, nights));
-			cin.ignore('\n', 10);
+			manager.addReservation(new RoomReservation(guest, room, price, nights));
+			break;
 		}
-		else if (choice == "2") {
+		case 2: {
 			string guest;
 			string event;
 			double cost;
 
-			cout << "Guest: ";
+			cout << "Ime: ";
+			cin.ignore();
 			getline(cin, guest);
-			cout << "Event: ";
+			cout << "Vid sabitie: ";
 			getline(cin, event);
-			cout << "Cost: ";
+			cout << "Suma za plashtane: ";
 			cin >> cost;
 
 			manager.addReservation(new EventReservation(guest, event, cost));
-			cin.ignore('\n', 10);
+			break;
 		}
-		else if (choice == "3") {
+		case 3: {
 			manager.listReservations();
+			break;
 		}
-		else if (choice == "4") {
+		case 4: {
 			double totalCost = manager.processReservations();
 			if (totalCost > 0) {
-				cout << "Total Cost of Processed Reservations: " << totalCost << "\n";
+				cout << "Obshta daljima suma: " << totalCost << "\n";
 			}
+			//manager.storeReservations();
+			break;
+		}
+		case 0: {
+			//manager.storeReservations();
+			cout << "Vsicki promeni bqxa uspeshno zapisani.\n";
+			cout << "Izhod ot programata.\n";
+			return 0;
+		}
+		default: {
+			cout << "Nevaliden izbor. Molq, opitaite otnovo\n";
+			break;
+		}
 		}
 	}
+
+
+
 }
