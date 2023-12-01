@@ -1,178 +1,156 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
-// cannot create an instance of an abstract class!!!
-class Room {
-public:
-	int roomNumber;
-
-	Room(int number, double price) {
-		this->roomNumber = number;
-		this->pricePerNight = price;
-	}
-
-	virtual void display() const = 0;
-	virtual double calculateCost(int nights) const = 0;
-
+// Abstract Base Class
+class Reservation {
 protected:
+	string guestName;
+public:
+	Reservation() {};
+
+	virtual double calculateCost() = 0;
+	virtual void displayInfo() = 0;
+};
+
+// Derived Classes
+class RoomReservation : public Reservation {
+private:
+	int roomNumber;
 	double pricePerNight;
+	int numberOfNights;
+public:
+	RoomReservation(string name, int room, double price, int nights) {
+		guestName = name;
+		roomNumber = room;
+		pricePerNight = price;
+		numberOfNights = nights;
+	};
+
+	virtual double calculateCost() {
+		return pricePerNight * numberOfNights;
+	};
+
+	virtual void displayInfo() {
+		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
+		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
+	};
 };
 
-class StandardRoom : public Room {
+class EventReservation : public Reservation {
+private:
+	string eventName;
+	double eventCost;
 public:
-	StandardRoom(int number) : Room(number,100.0) {
-		this->roomNumber = number;
-		this->pricePerNight = 100.0;
-	}
+	EventReservation(string name, string event, double cost) {
+		guestName = name;
+		eventName = event;
+		eventCost = cost;
+	};
 
-	void display() const override {
-		cout << "Standard Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
-	}
+	virtual double calculateCost() {
+		return eventCost;
+	};
 
-	double calculateCost(int nights) const override {
-		return pricePerNight * nights;
-	}
+	virtual void displayInfo() {
+		cout << "Ime: " << guestName << ", Vid sabitie: " << eventName << "\n";
+		cout << "Suma za plasthane: " << calculateCost() << "\n";
+	};
 };
 
-class DeluxeRoom : public Room {
+class ReservationManager {
+private:
+	vector<Reservation*> reservationList;
 public:
-	DeluxeRoom(int number) : Room(number, 150.0) {}
+	ReservationManager() {};
 
-	void display() const override {
-		cout << "Deluxe Room #" << roomNumber << " - $" << pricePerNight << " per night\n";
+	void addReservation(Reservation* res) {
+		reservationList.push_back(res);
 	}
 
-	double calculateCost(int nights) const override {
-		return pricePerNight * nights;
-	}
-};
-
-class Hotel {
-public:
-	Hotel() {
-		rooms.push_back(new StandardRoom(101));
-		rooms.push_back(new StandardRoom(102));
-		rooms.push_back(new DeluxeRoom(201));
-		// Add more rooms as needed
-	}
-
-	void displayRooms() const {
-		cout << "Available Rooms:\n";
-		for (const Room* room : rooms) {
-			room->display();
+	void listReservations() {
+		if (reservationList.empty()) {
+			cout << "No reservations\n";
 		}
-	}
-
-	double reserveRoom(int roomNumber, int nights) {
-		for (Room* room : rooms) {
-			if (room->roomNumber == roomNumber) {
-				double cost = room->calculateCost(nights);
-
-				if (cost != 0.0) {
-					string customerName, customerPhone;
-					cout << "Enter customer name: ";
-					cin.ignore();
-					getline(cin, customerName);
-
-					cout << "Enter customer phone number: ";
-					cin >> customerPhone;
-
-					// Add reservation details to the file
-					fstream reservationFile;
-					reservationFile.open("reservations.txt", ios::app);
-					if (!reservationFile.is_open()) {
-						cout << "Error: Unable to open file.\n";
-						return 0;
-					}
-					reservationFile << "Room #" << roomNumber << ", Customer: " << customerName
-						<< ", Phone: " << customerPhone << ", Nights: " << nights << ", Cost: $" << cost
-						<< "\n";
-					reservationFile.close();
-
-					return cost;
-				}
+		else {
+			for (int i = 0; i < reservationList.size(); i++) {
+				reservationList[i]->displayInfo();
 			}
 		}
-
-		return 0.0; // Room not found
 	}
 
-	//void clearReservations() {
-	//	
-	//	fstream fc;
-	//	fc.open("reservations.txt", ios::trunc);				// TO DO
-	//	if (!fc.is_open()) {
-	//		cout << "Error: Unable to open file.\n";
-	//		return;
-	//	}
-	//	fc.close();
-
-
-	//}
-
-private:
-	vector<Room*> rooms;
+	double processReservations() {
+		double totalCost = 0;
+		if (reservationList.empty()) {
+			cout << "No reservations to process\n";
+		}
+		else {
+			totalCost = reservationList[0]->calculateCost();
+			reservationList.erase(reservationList.begin());
+		}
+		return totalCost;
+	}
 };
-
-void displayMenu() {
-	cout << "\nMenu:\n";
-	cout << "1. Display Avaliable Rooms.\n";
-	cout << "2. Make a Reservation.\n";
-	cout << "3. Clear Reservations.\n";
-	cout << "-------------------------\n";
-	cout << "4. Exit\n";
-	cout << "Enter your choice: ";
-}
 
 int main() {
-	Hotel hotel;
+	ReservationManager manager;
+	string choice = "";
 
-	while (true) {
-		displayMenu();
-
-		int choice;
+	while (choice != "0") {
+		cout << "\tMENU\t\n";
+		cout << "1. Add Room Reservation\n";
+		cout << "2. Add Event Reservation\n";
+		cout << "3. List Reservations\n";
+		cout << "4. Process Reservations\n";
+		cout << "0. Exit\n";
 		cin >> choice;
 
-		double cost;
+		cin.ignore('\n', 10);
 
-		switch (choice) {
-		case 1:
-			hotel.displayRooms();
-			break;
+		if (choice == "1") {
+			string guest;
+			int room;
+			double rate;
+			int nights;
 
-		case 2:
-			int roomNumber, nights;
-			cout << "Enter room number: ";
-			cin >> roomNumber;
-			cout << "Enter number of nights: ";
+			cout << "Guest: ";
+			getline(cin, guest);
+			cout << "Room Number: ";
+			cin >> room;
+			cout << "Nightly Rate: ";
+			cin >> rate;
+			cout << "Number of Nights: ";
 			cin >> nights;
 
-			cost = hotel.reserveRoom(roomNumber, nights);
+			manager.addReservation(new RoomReservation(guest, room, rate, nights));
+			cin.ignore('\n', 10);
+		}
+		else if (choice == "2") {
+			string guest;
+			string event;
+			double cost;
 
-			if (cost != 0.0) {
-				cout << "Room reserved successfully. Total cost: $" << cost << "\n";
+			cout << "Guest: ";
+			getline(cin, guest);
+			cout << "Event: ";
+			getline(cin, event);
+			cout << "Cost: ";
+			cin >> cost;
+
+			manager.addReservation(new EventReservation(guest, event, cost));
+			cin.ignore('\n', 10);
+		}
+		else if (choice == "3") {
+			manager.listReservations();
+		}
+		else if (choice == "4") {
+			double totalCost = manager.processReservations();
+			if (totalCost > 0) {
+				cout << "Total Cost of Processed Reservations: " << totalCost << "\n";
 			}
-			else {
-				cout << "Error: Room not found or invalid input.\n";
-			}
-			break;
-
-		case 3:
-			cout<<"Clearing reservations...\n";
-			break;
-
-		case 4:
-			cout << "Exiting program. Thank you!\n";
-			return 0;
-
-		default:
-			cout << "Invalid choice. Please try again.\n";
 		}
 	}
-
-	return 0;
 }
