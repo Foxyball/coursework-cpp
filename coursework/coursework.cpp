@@ -126,30 +126,27 @@ int main() {
 
 	while (true) {
 		menu();
-		cout << "Enter your choice: ";
+		cout << "Izberete: ";
 		cin >> choice;
-
-		// Convert the choice to an integer for comparison
-		//int choiceInt = stoi(choice);
 
 		switch (choice) {
 		case 1: {
 			string guest;
 			int room;
-			double rate;
+			double price;
 			int nights;
 
-			cout << "Guest: ";
+			cout << "Ime: ";
 			cin.ignore();
 			getline(cin, guest);
-			cout << "Room Number: ";
+			cout << "Staq: ";
 			cin >> room;
-			cout << "Nightly Rate: ";
-			cin >> rate;
-			cout << "Number of Nights: ";
+			cout << "Suma za plashtane: ";
+			cin >> price;
+			cout << "Dni prestoi: ";
 			cin >> nights;
 
-			manager.addReservation(new RoomReservation(guest, room, rate, nights));
+			manager.addReservation(new RoomReservation(guest, room, price, nights));
 			break;
 		}
 		case 2: {
@@ -157,12 +154,12 @@ int main() {
 			string event;
 			double cost;
 
-			cout << "Guest: ";
+			cout << "Ime: ";
 			cin.ignore();
 			getline(cin, guest);
-			cout << "Event: ";
+			cout << "Vid sabitie: ";
 			getline(cin, event);
-			cout << "Cost: ";
+			cout << "Suma za plashtane: ";
 			cin >> cost;
 
 			manager.addReservation(new EventReservation(guest, event, cost));
@@ -175,7 +172,7 @@ int main() {
 		case 4: {
 			double totalCost = manager.processReservations();
 			if (totalCost > 0) {
-				cout << "Total Cost of Processed Reservations: " << totalCost << "\n";
+				cout << "Obshta daljima suma: " << totalCost << "\n";
 			}
 			break;
 		}
@@ -186,7 +183,7 @@ int main() {
 			return 0;
 		}
 		default: {
-			cout << "Invalid choice. Please enter a valid option.\n";
+			cout << "Nevaliden izbor. Molq, opitaite otnovo\n";
 			break;
 		}
 		}
