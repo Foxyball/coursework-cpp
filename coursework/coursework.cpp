@@ -14,6 +14,11 @@ public:
 
 	virtual double calculateCost() = 0;
 	virtual void displayInfo() = 0;
+
+	// Get the guest name
+	string getGuestName() {
+		return guestName;
+	}
 };
 
 // Derived Classes
@@ -39,7 +44,7 @@ public:
 		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
 	};
 };
-
+// Derived Classes
 class EventReservation : public Reservation {
 private:
 	string eventName;
@@ -60,7 +65,7 @@ public:
 		cout << "Suma za plasthane: " << calculateCost() << "\n";
 	};
 };
-
+// Vector Class
 class ReservationManager {
 private:
 	vector<Reservation*> reservationList;
@@ -69,6 +74,18 @@ public:
 
 	void addReservation(Reservation* res) {
 		reservationList.push_back(res);
+
+		fstream fo;
+		fo.open("rezervacii.txt", ios::out | ios::app);
+		if (!fo.is_open()) {
+			cout << "Ne moje da se otvori faila\n";
+			return;
+		}
+		fo << "Ime: " << res->getGuestName() << "\n";
+		fo << "Suma za plashtane: " << res->calculateCost() << "\n";
+		fo << "Info: "; res->displayInfo();
+		fo << "\n";
+		fo.close();
 	}
 
 	void listReservations() {
@@ -93,31 +110,20 @@ public:
 		}
 		return totalCost;
 	}
-
-	void saveReservations() {
-		fstream fo;
-		fo.open("rezervacii.txt", ios::out);
-		if (fo.is_open()) {
-			for (int i = 0; i < reservationList.size(); i++) {
-				fo << reservationList[i]->calculateCost() << "\n";
-			}
-			fo.close();
-		}
-		else {
-			cout << "Ne moje da se otvori faila\n";
-		}
-
-
-	}
 };
 
+
+
+// Menu
 void menu() {
 	cout << "\tMENU\t\n";
-	cout << "1. Add Room Reservation\n";
-	cout << "2. Add Event Reservation\n";
-	cout << "3. List Reservations\n";
-	cout << "4. Process Reservations\n";
-	cout << "0. Exit\n";
+	cout << "=============================\n";
+	cout << "1. Dobavi rezervaciq\n";
+	cout << "2. Dobavi sabitie\n";
+	cout << "3. Pokaji rezervacii\n";
+	cout << "4. Obrabotka na rezervacii\n";
+	cout << "=============================\n";
+	cout << "0. Izxod\n";
 }
 
 int main() {
@@ -174,12 +180,13 @@ int main() {
 			if (totalCost > 0) {
 				cout << "Obshta daljima suma: " << totalCost << "\n";
 			}
+			//manager.storeReservations();
 			break;
 		}
 		case 0: {
-			manager.saveReservations();
+			//manager.storeReservations();
 			cout << "Vsicki promeni bqxa uspeshno zapisani.\n";
-			cout<<"Izhod ot programata.\n";
+			cout << "Izhod ot programata.\n";
 			return 0;
 		}
 		default: {
@@ -188,5 +195,7 @@ int main() {
 		}
 		}
 	}
+
+
 
 }
