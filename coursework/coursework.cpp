@@ -8,6 +8,7 @@ using namespace std;
 // Abstract Base Class
 class Reservation {
 protected:
+	// da se dobavi checkInDate i checkOutDate
 	string guestName;
 public:
 	Reservation() {};
@@ -72,9 +73,7 @@ private:
 public:
 	ReservationManager() {};
 
-	void addReservation(Reservation* res) {
-		reservationList.push_back(res);
-
+	void saveToFile(Reservation* res) {
 		fstream fo;
 		fo.open("rezervacii.txt", ios::out | ios::app);
 		if (!fo.is_open()) {
@@ -86,6 +85,11 @@ public:
 		fo << "Info: "; res->displayInfo(); //ne raboti
 		fo << "\n";
 		fo.close();
+	}
+
+	void addReservation(Reservation* res) {
+		reservationList.push_back(res);
+		saveToFile(res);
 	}
 
 	void listReservations() {
@@ -180,11 +184,9 @@ int main() {
 			if (totalCost > 0) {
 				cout << "Obshta daljima suma: " << totalCost << "\n";
 			}
-			//manager.storeReservations();
 			break;
 		}
 		case 0: {
-			//manager.storeReservations();
 			cout << "Vsicki promeni bqxa uspeshno zapisani.\n";
 			cout << "Izhod ot programata.\n";
 			return 0;
