@@ -1,9 +1,24 @@
-Name: IVAN
-Suma za plashtane: 450
+Ime: DIMITAR SPASOV
+Suma za plashtane: 80
 Info: 
-Name: Ivan
-Suma za plashtane: 75
-Info: 
-Name: ZAPISHI SE V SKAPANIQ FAIL
+Ime: ASD ASD
 Suma za plashtane: 500
+Info: 
+Ime: ASD 2
+Suma za plashtane: 150
+Info: 
+Ime: ASADASDADDDAD
+Suma za plashtane: 750
+Info: 
+Ime: ASDADADADASDA@@@@
+Suma za plashtane: 222
+Info: 
+Ime: VVVVVVVVVVVVV
+Suma za plashtane: 3
+Info: 
+Ime: Ivan Petrov
+Suma za plashtane: 120
+Info: 
+Ime: DIMITAR
+Suma za plashtane: 100
 Info: 
