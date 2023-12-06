@@ -1,0 +1,29 @@
+Ime: Hristo Sabev
+Suma za plashtane: 200
+Info: 
+Ime: Hristo Sabev
+Suma za plashtane: 150
+Info: 
+Ime: Hristo Stoyanov Sabev
+Data na nastanqvane: Data na napuskane: Suma za plashtane: 250
+
+Ime: Iliq Asenov
+Data na nastanqvane: 6.12.2023
+Data na napuskane: 12.12.2023
+Suma za plashtane: 150
+
+Ime: ASD
+Data na nastanqvane: 
+Data na napuskane: 
+Suma za plashtane: 80
+
+Ime: James Bond
+Data na nastanqvane: 6.12.2023
+Data na napuskane: 7.12.2023
+Suma za plashtane: 100
+
+Ime: vvvv
+Data na nastanqvane: 6.12.2023
+Data na napuskane: 8.12.2023
+Suma za plashtane: 80
+
