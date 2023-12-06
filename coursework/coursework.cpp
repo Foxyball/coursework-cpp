@@ -10,11 +10,11 @@ using namespace std;
 	exception handling - X
 
 	Problems:
-	Нямаме нужда от numberOfNights сега, заради датите.
-	Не сме валидирали датите.
+	Nqmame nujda ot numberOfNights sega, zaradite datite.
+	Ne sme validirali datite.
 
 	Fixes:
-	Имаме достатъчно информация, която се записва във файла [ saveToFile(). ] метода.
+	Imame dostatuchno informaciq, koqto se zapisva vav faila [ saveToFile(). ] metodata.
 */
 
 // Abstract Base Class
