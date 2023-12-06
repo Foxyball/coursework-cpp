@@ -29,10 +29,10 @@ private:
 	double pricePerNight;
 	int numberOfNights;
 public:
-	RoomReservation(string name, int room, double price, int nights) {
+	RoomReservation(string name, int room, int nights) {
 		guestName = name;
 		roomNumber = room;
-		pricePerNight = price;
+		pricePerNight = 50; // 50lv za noshtuvka
 		numberOfNights = nights;
 	};
 
@@ -46,15 +46,15 @@ public:
 	};
 };
 // Derived Classes
-class EventReservation : public Reservation {
+class EventReservation : public Reservation { // tozi klas trqbva da go smenim s VipREservation i BusinessReservation
 private:
 	string eventName;
 	double eventCost;
 public:
-	EventReservation(string name, string event, double cost) {
+	EventReservation(string name, string event) {
 		guestName = name;
 		eventName = event;
-		eventCost = cost;
+		eventCost = 80; // 80lv za sabitie
 	};
 
 	virtual double calculateCost() {
@@ -126,8 +126,8 @@ void menu() {
 	cout << "2. Dobavi sabitie\n";
 	cout << "3. Pokaji rezervacii\n";
 	cout << "4. Obrabotka na rezervacii\n";
-	cout << "=============================\n";
 	cout << "0. Izxod\n";
+	cout << "=============================\n";
 }
 
 int main() {
@@ -143,7 +143,6 @@ int main() {
 		case 1: {
 			string guest;
 			int room;
-			double price;
 			int nights;
 
 			cout << "Ime: ";
@@ -151,28 +150,23 @@ int main() {
 			getline(cin, guest);
 			cout << "Staq: ";
 			cin >> room;
-			cout << "Suma za plashtane: ";
-			cin >> price;
 			cout << "Dni prestoi: ";
 			cin >> nights;
 
-			manager.addReservation(new RoomReservation(guest, room, price, nights));
+			manager.addReservation(new RoomReservation(guest, room,nights));
 			break;
 		}
 		case 2: {
 			string guest;
 			string event;
-			double cost;
 
 			cout << "Ime: ";
 			cin.ignore();
 			getline(cin, guest);
 			cout << "Vid sabitie: ";
 			getline(cin, event);
-			cout << "Suma za plashtane: ";
-			cin >> cost;
 
-			manager.addReservation(new EventReservation(guest, event, cost));
+			manager.addReservation(new EventReservation(guest, event));
 			break;
 		}
 		case 3: {
