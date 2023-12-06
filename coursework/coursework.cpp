@@ -2,14 +2,28 @@
 #include <vector>
 #include <string>
 #include <fstream>
-
 using namespace std;
+
+/*
+	VipReservation - X
+	BusinessReservation - X
+	exception handling - X
+
+	Problems:
+	Нямаме нужда от numberOfNights сега, заради датите.
+	Не сме валидирали датите.
+
+	Fixes:
+	Имаме достатъчно информация, която се записва във файла [ saveToFile(). ] метода.
+*/
 
 // Abstract Base Class
 class Reservation {
 protected:
-	// da se dobavi checkInDate i checkOutDate
 	string guestName;
+	string checkInDate;
+	string checkOutDate;
+
 public:
 	Reservation() {};
 
@@ -20,17 +34,30 @@ public:
 	string getGuestName() {
 		return guestName;
 	}
+
+	// Get the check in date
+	string getCheckInDate() {
+		return checkInDate;
+	}
+
+	// Get the check out date
+	string getCheckOutDate() {
+		return checkOutDate;
+	}
+
 };
 
 // Derived Classes
-class RoomReservation : public Reservation {
+class StandardRoomReservation : public Reservation {
 private:
 	int roomNumber;
 	double pricePerNight;
 	int numberOfNights;
 public:
-	RoomReservation(string name, int room, int nights) {
+	StandardRoomReservation(string name, string checkIn, string checkOut, int room, int nights) {
 		guestName = name;
+		checkInDate = checkIn;
+		checkOutDate = checkOut;
 		roomNumber = room;
 		pricePerNight = 50; // 50lv za noshtuvka
 		numberOfNights = nights;
@@ -42,17 +69,20 @@ public:
 
 	virtual void displayInfo() {
 		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
+		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
 		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
 	};
 };
 // Derived Classes
-class EventReservation : public Reservation { // tozi klas trqbva da go smenim s VipREservation i BusinessReservation
+class EventReservation : public Reservation { // tozi klas trqbva da go smenim s VipREservation + BusinessReservation
 private:
 	string eventName;
 	double eventCost;
 public:
-	EventReservation(string name, string event) {
+	EventReservation(string name, string checkIn, string checkOut, string event) {
 		guestName = name;
+		checkInDate = checkIn;
+		checkOutDate = checkOut;
 		eventName = event;
 		eventCost = 80; // 80lv za sabitie
 	};
@@ -63,6 +93,7 @@ public:
 
 	virtual void displayInfo() {
 		cout << "Ime: " << guestName << ", Vid sabitie: " << eventName << "\n";
+		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
 		cout << "Suma za plasthane: " << calculateCost() << "\n";
 	};
 };
@@ -81,8 +112,9 @@ public:
 			return;
 		}
 		fo << "Ime: " << res->getGuestName() << "\n";
+		fo << "Data na nastanqvane: " << res->getCheckInDate() << "\n";
+		fo << "Data na napuskane: " << res->getCheckOutDate() << "\n";
 		fo << "Suma za plashtane: " << res->calculateCost() << "\n";
-		fo << "Info: "; res->displayInfo(); //ne raboti
 		fo << "\n";
 		fo.close();
 	}
@@ -122,11 +154,11 @@ public:
 void menu() {
 	cout << "\tMENU\t\n";
 	cout << "=============================\n";
-	cout << "1. Dobavi rezervaciq\n";
+	cout << "1. Add reservation\n";
 	cout << "2. Dobavi sabitie\n";
-	cout << "3. Pokaji rezervacii\n";
-	cout << "4. Obrabotka na rezervacii\n";
-	cout << "0. Izxod\n";
+	cout << "3. List reservations\n";
+	cout << "4. Process\n";
+	cout << "0. Exit\n";
 	cout << "=============================\n";
 }
 
@@ -142,6 +174,8 @@ int main() {
 		switch (choice) {
 		case 1: {
 			string guest;
+			string checkIn;
+			string checkOut;
 			int room;
 			int nights;
 
@@ -152,12 +186,18 @@ int main() {
 			cin >> room;
 			cout << "Dni prestoi: ";
 			cin >> nights;
+			cout << "Check-In: ";
+			cin >> checkIn;
+			cout << "Check-Out: ";
+			cin >> checkOut;
 
-			manager.addReservation(new RoomReservation(guest, room,nights));
+			manager.addReservation(new StandardRoomReservation(guest, checkIn, checkOut, room, nights));
 			break;
 		}
 		case 2: {
 			string guest;
+			string checkIn;
+			string checkOut;
 			string event;
 
 			cout << "Ime: ";
@@ -165,8 +205,12 @@ int main() {
 			getline(cin, guest);
 			cout << "Vid sabitie: ";
 			getline(cin, event);
+			cout << "Check-In: ";
+			cin >> checkIn;
+			cout << "Check-Out: ";
+			cin >> checkOut;
 
-			manager.addReservation(new EventReservation(guest, event));
+			manager.addReservation(new EventReservation(guest, checkIn, checkOut, event));
 			break;
 		}
 		case 3: {
@@ -181,7 +225,6 @@ int main() {
 			break;
 		}
 		case 0: {
-			cout << "Vsicki promeni bqxa uspeshno zapisani.\n";
 			cout << "Izhod ot programata.\n";
 			return 0;
 		}
