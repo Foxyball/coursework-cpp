@@ -7,15 +7,12 @@ using namespace std;
 /*
 	VipReservation - X
 	BusinessReservation - X
-	exception handling - X
 
 	Problems:
 	Nqmame nujda ot numberOfNights sega, zaradite datite.
 	Ne sme validirali datite.
 	Na angliski ili shliokavica da sa saobshteniqta ? Trqbva da sa v edin stil/ezik.
 
-	Fixes:
-	Imame dostatuchno informaciq, koqto se zapisva vav faila [ saveToFile(). ] metodata.
 */
 
 // Abstract Base Class
@@ -108,8 +105,13 @@ public:
 	void saveToFile(Reservation* res) {
 		fstream fo;
 		fo.open("rezervacii.txt", ios::out | ios::app);
-		if (!fo.is_open()) {
-			cout << "Ne moje da se otvori faila\n";
+		try {
+			if (!fo.is_open()) {
+				throw exception();
+			}
+		}
+		catch (exception e) {
+			cout << "Error: " << e.what() << "\n";
 			return;
 		}
 		fo << "Ime: " << res->getGuestName() << "\n";

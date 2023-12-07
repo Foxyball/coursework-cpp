@@ -27,3 +27,8 @@ Data na nastanqvane: 6.12.2023
 Data na napuskane: 8.12.2023
 Suma za plashtane: 80
 
+Ime: asdasdada
+Data na nastanqvane: aa
+Data na napuskane: aadf
+Suma za plashtane: 100
+
