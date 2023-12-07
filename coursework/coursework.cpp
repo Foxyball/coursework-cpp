@@ -12,6 +12,7 @@ using namespace std;
 	Problems:
 	Nqmame nujda ot numberOfNights sega, zaradite datite.
 	Ne sme validirali datite.
+	Na angliski ili shliokavica da sa saobshteniqta ? Trqbva da sa v edin stil/ezik.
 
 	Fixes:
 	Imame dostatuchno informaciq, koqto se zapisva vav faila [ saveToFile(). ] metodata.
