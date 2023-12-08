@@ -5,13 +5,9 @@
 using namespace std;
 
 /*
-	VipReservation - X
-	BusinessReservation - X
-
-	Problems:
-	Nqmame nujda ot numberOfNights sega, zaradite datite.
-	Ne sme validirali datite.
-	Na angliski ili shliokavica da sa saobshteniqta ? Trqbva da sa v edin stil/ezik.
+	Pregled i testvane na programata:
+	- Vankata da proveri BULSTAT-a dali e ok logicheski
+	- pregled na fukncionalnostite na VIP i Business rezervaciite
 
 */
 
@@ -28,17 +24,14 @@ public:
 	virtual double calculateCost() = 0;
 	virtual void displayInfo() = 0;
 
-	// Get the guest name
 	string getGuestName() {
 		return guestName;
 	}
 
-	// Get the check in date
 	string getCheckInDate() {
 		return checkInDate;
 	}
 
-	// Get the check out date
 	string getCheckOutDate() {
 		return checkOutDate;
 	}
@@ -46,23 +39,30 @@ public:
 };
 
 // Derived Classes
-class StandardRoomReservation : public Reservation {
+// StandardReservation
+class StandardReservation : public Reservation {
 private:
 	int roomNumber;
 	double pricePerNight;
 	int numberOfNights;
 public:
-	StandardRoomReservation(string name, string checkIn, string checkOut, int room, int nights) {
+	StandardReservation(string name, string checkIn, string checkOut, int roomID, int nights) {
 		guestName = name;
 		checkInDate = checkIn;
 		checkOutDate = checkOut;
-		roomNumber = room;
-		pricePerNight = 50; // 50lv za noshtuvka
+		roomNumber = roomID;
+		pricePerNight = 50;
 		numberOfNights = nights;
 	};
 
 	virtual double calculateCost() {
-		return pricePerNight * numberOfNights;
+		// 2% discount for more than 5 nights
+		if (numberOfNights > 5) {
+			return pricePerNight * numberOfNights * 0.02;
+		}
+		else {
+			return pricePerNight * numberOfNights;
+		}
 	};
 
 	virtual void displayInfo() {
@@ -71,31 +71,86 @@ public:
 		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
 	};
 };
-// Derived Classes
-class EventReservation : public Reservation { // tozi klas trqbva da go smenim s VipREservation + BusinessReservation
+// VipReservation
+class VipReservation : public Reservation {
 private:
-	string eventName;
-	double eventCost;
+	int roomNumber;
+	double vipCost;
+	double drinkDiscount;
+	int numberofNights;
 public:
-	EventReservation(string name, string checkIn, string checkOut, string event) {
+	VipReservation(string name, string checkIn, string checkOut, int roomID, int nights) {
 		guestName = name;
 		checkInDate = checkIn;
 		checkOutDate = checkOut;
-		eventName = event;
-		eventCost = 80; // 80lv za sabitie
+		roomNumber = roomID;
+		vipCost = 80;
+		drinkDiscount = 0.02;
+		numberofNights = nights;
 	};
 
 	virtual double calculateCost() {
-		return eventCost;
+		return vipCost * numberofNights * (1 - drinkDiscount);
 	};
 
 	virtual void displayInfo() {
-		cout << "Ime: " << guestName << ", Vid sabitie: " << eventName << "\n";
+		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
 		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
 		cout << "Suma za plasthane: " << calculateCost() << "\n";
 	};
 };
-// Vector Class
+// Derived Classes
+class BusinessReservation :public Reservation {
+private:
+	int roomNumber;
+	double pricePerNight = 100;
+	double discount = 0.1;
+	int numberOfNights;
+	string bulstat;
+
+
+public:
+	BusinessReservation(string companyName, string checkIn, string checkOut, int roomID, int nights, string bul) {
+		guestName = companyName;
+		checkInDate = checkIn;
+		checkOutDate = checkOut;
+		roomNumber = roomID;
+		numberOfNights = nights;
+		setBulstat(bul);
+	};
+
+	bool validateBulstat(string bulstat) {
+		if (bulstat.length() != 9) {
+			return false;
+		}
+		for (int i = 0; i < bulstat.length(); i++) {
+			if (!isdigit(bulstat[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void setBulstat(string bulstat) {
+		while (!validateBulstat(bulstat)) {
+			cout << "Vuveli ste greshen bulstat:(Vuvedi otnovo): \n";
+			cin >> bulstat;
+		}
+		this->bulstat = bulstat;
+	}
+
+	virtual double calculateCost() {
+		return pricePerNight * numberOfNights * (1 - discount);
+	};
+
+	virtual void displayInfo() {
+		cout << "Firma: " << guestName << ", Staq: " << roomNumber << "\n";
+		cout << "Bulstat: " << bulstat << "\n";
+		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
+		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
+	}
+};
+// BusinessReservation
 class ReservationManager {
 private:
 	vector<Reservation*> reservationList;
@@ -158,9 +213,10 @@ void menu() {
 	cout << "\tMENU\t\n";
 	cout << "=============================\n";
 	cout << "1. Add reservation\n";
-	cout << "2. Dobavi sabitie\n";
-	cout << "3. List reservations\n";
-	cout << "4. Process\n";
+	cout << "2. Add VIP reservation\n";
+	cout << "3. Add business reservation\n";
+	cout << "4. List reservations\n";
+	cout << "5. Process and Save\n";
 	cout << "0. Exit\n";
 	cout << "=============================\n";
 }
@@ -189,38 +245,66 @@ int main() {
 			cin >> room;
 			cout << "Dni prestoi: ";
 			cin >> nights;
-			cout << "Check-In: ";
+			cout << "Data na nastanqvane(d.mm.YYYY): ";
 			cin >> checkIn;
-			cout << "Check-Out: ";
+			cout << "Data na napuskane(d.mm.YYYY): ";
 			cin >> checkOut;
 
-			manager.addReservation(new StandardRoomReservation(guest, checkIn, checkOut, room, nights));
+			manager.addReservation(new StandardReservation(guest, checkIn, checkOut, room, nights));
 			break;
 		}
 		case 2: {
-			string guest;
+			string vipGuest;
 			string checkIn;
 			string checkOut;
-			string event;
+			int room;
+			int nights;
 
 			cout << "Ime: ";
 			cin.ignore();
-			getline(cin, guest);
-			cout << "Vid sabitie: ";
-			getline(cin, event);
-			cout << "Check-In: ";
+			getline(cin, vipGuest);
+			cout << "Staq: ";
+			cin >> room;
+			cout << "Dni prestoi: ";
+			cin >> nights;
+			cout << "Data na nastanqvane(d.mm.YYYY): ";
 			cin >> checkIn;
-			cout << "Check-Out: ";
+			cout << "Data na napuskane(d.mm.YYYY): ";
 			cin >> checkOut;
 
-			manager.addReservation(new EventReservation(guest, checkIn, checkOut, event));
+			manager.addReservation(new VipReservation(vipGuest, checkIn, checkOut, room, nights));
 			break;
 		}
 		case 3: {
-			manager.listReservations();
+			string companyName;
+			string checkIn;
+			string checkOut;
+			int room;
+			int nights;
+			string bulstat;
+
+			cout << "Ime na firma: ";
+			cin.ignore();
+			getline(cin, companyName);
+			cout << "Staq: ";
+			cin >> room;
+			cout << "Dni prestoi: ";
+			cin >> nights;
+			cout << "Data na nastanqvane(d.mm.YYYY): ";
+			cin >> checkIn;
+			cout << "Data na napuskane(d.mm.YYYY): ";
+			cin >> checkOut;
+			cout << "Bulstat(10 simvola): ";
+			cin >> bulstat;
+
+			manager.addReservation(new BusinessReservation(companyName, checkIn, checkOut, room, nights, bulstat));
 			break;
 		}
 		case 4: {
+			manager.listReservations();
+			break;
+		}
+		case 5: {
 			double totalCost = manager.processReservations();
 			if (totalCost > 0) {
 				cout << "Obshta daljima suma: " << totalCost << "\n";
@@ -237,7 +321,4 @@ int main() {
 		}
 		}
 	}
-
-
-
 }
