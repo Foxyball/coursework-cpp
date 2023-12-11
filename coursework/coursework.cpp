@@ -61,7 +61,7 @@ public:
 	virtual void displayInfo() {
 		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
 		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
-		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
+		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << " lv." << "\n";
 	};
 };
 // VipReservation
@@ -89,7 +89,7 @@ public:
 	virtual void displayInfo() {
 		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
 		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
-		cout << "Suma za plasthane: " << calculateCost() << "\n";
+		cout << "Suma za plasthane: " << calculateCost() << " lv." << "\n";
 	};
 };
 // Derived Classes
@@ -140,7 +140,7 @@ public:
 		cout << "Firma: " << guestName << ", Staq: " << roomNumber << "\n";
 		cout << "Bulstat: " << bulstat << "\n";
 		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
-		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << "\n";
+		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << " lv." << "\n";
 	}
 };
 // BusinessReservation
@@ -165,7 +165,7 @@ public:
 		fo << "Ime: " << res->getGuestName() << "\n";
 		fo << "Data na nastanqvane: " << res->getCheckInDate() << "\n";
 		fo << "Data na napuskane: " << res->getCheckOutDate() << "\n";
-		fo << "Suma za plashtane: " << res->calculateCost() << "\n";
+		fo << "Suma za plashtane: " << res->calculateCost() << " lv." << "\n";
 		fo << "\n";
 		fo.close();
 	}
@@ -300,7 +300,7 @@ int main() {
 		case 5: {
 			double totalCost = manager.processReservations();
 			if (totalCost > 0) {
-				cout << "Obshta daljima suma: " << totalCost << "\n";
+				cout << "Obshta daljima suma: " << totalCost << " lv." << "\n";
 			}
 			break;
 		}
