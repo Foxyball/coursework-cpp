@@ -4,13 +4,6 @@
 #include <fstream>
 using namespace std;
 
-/*
-	Pregled i testvane na programata:
-	- Vankata da proveri BULSTAT-a dali e ok logicheski
-	- pregled na fukncionalnostite na VIP i Business rezervaciite
-
-*/
-
 // Abstract Base Class
 class Reservation {
 protected:
@@ -162,7 +155,7 @@ public:
 		fo.open("rezervacii.txt", ios::out | ios::app);
 		try {
 			if (!fo.is_open()) {
-				throw exception();
+				throw exception("Faila ne moje da se otvori.");
 			}
 		}
 		catch (exception e) {
@@ -294,7 +287,7 @@ int main() {
 			cin >> checkIn;
 			cout << "Data na napuskane(d.mm.YYYY): ";
 			cin >> checkOut;
-			cout << "Bulstat(10 simvola): ";
+			cout << "Bulstat(9 simvola): ";
 			cin >> bulstat;
 
 			manager.addReservation(new BusinessReservation(companyName, checkIn, checkOut, room, nights, bulstat));

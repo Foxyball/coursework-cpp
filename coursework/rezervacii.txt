@@ -13,3 +13,8 @@ Data na nastanqvane: 8.12.2023
 Data na napuskane: 18.12.2023
 Suma za plashtane: 10
 
+Ime: EEOOOOOD
+Data na nastanqvane: dnes
+Data na napuskane: utre
+Suma za plashtane: 270
+
