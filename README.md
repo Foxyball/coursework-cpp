@@ -1,5 +1,5 @@
 # coursework-cpp
-OOP coursework
+OOP coursework 2023
 
 # Authors
 Hristo, Velizar, Ivan, Iliya
