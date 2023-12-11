@@ -18,3 +18,13 @@ Data na nastanqvane: dnes
 Data na napuskane: utre
 Suma za plashtane: 270
 
+Ime: Hristo Sabev
+Data na nastanqvane: 11.12.2023
+Data na napuskane: 16.12.2023
+Suma za plashtane: 250
+
+Ime: Hristo Sabev
+Data na nastanqvane: 11.12.2023
+Data na napuskane: 13.12.2023
+Suma za plashtane: 100 lv.
+
