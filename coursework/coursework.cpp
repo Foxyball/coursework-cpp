@@ -59,9 +59,9 @@ public:
 	};
 
 	virtual void displayInfo() {
-		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
-		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
-		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << " lv." << "\n";
+		cout << "Name: " << guestName << ", Room number: " << roomNumber << "\n";
+		cout << "Check-in date: " << checkInDate << ", Check-out date: " << checkOutDate << "\n";
+		cout << "How many days: " << numberOfNights << ", Total Price: " << calculateCost() << " lv." << "\n";
 	};
 };
 // VipReservation
@@ -87,12 +87,13 @@ public:
 	};
 
 	virtual void displayInfo() {
-		cout << "Ime: " << guestName << ", Staq: " << roomNumber << "\n";
-		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
+		cout << "Name: " << guestName << ", Room number: " << roomNumber << "\n";
+		cout << "Check-in date: " << checkInDate << ", Check-out date: " << checkOutDate << "\n";
 		cout << "Suma za plasthane: " << calculateCost() << " lv." << "\n";
 	};
 };
 // Derived Classes
+// BusinessReservation
 class BusinessReservation :public Reservation {
 private:
 	int roomNumber;
@@ -126,7 +127,7 @@ public:
 
 	void setBulstat(string bulstat) {
 		while (!validateBulstat(bulstat)) {
-			cout << "Vuveli ste greshen bulstat:(Vuvedi otnovo): \n";
+			cout << "You have entered an invalid bulstat. It must be 9 digits.(Try again).\n";
 			cin >> bulstat;
 		}
 		this->bulstat = bulstat;
@@ -137,13 +138,13 @@ public:
 	};
 
 	virtual void displayInfo() {
-		cout << "Firma: " << guestName << ", Staq: " << roomNumber << "\n";
+		cout << "Firm Name: " << guestName << ", Room number: " << roomNumber << "\n";
 		cout << "Bulstat: " << bulstat << "\n";
-		cout << "Data na nastanqvane: " << checkInDate << ", Data na napuskane: " << checkOutDate << "\n";
-		cout << "Dni prestoi: " << numberOfNights << ", Suma za plashtane: " << calculateCost() << " lv." << "\n";
+		cout << "Check-in date: " << checkInDate << ", Check-out date: " << checkOutDate << "\n";
+		cout << "How many days: " << numberOfNights << ", Total Price: " << calculateCost() << " lv." << "\n";
 	}
 };
-// BusinessReservation
+// ReservationManager (The class that manages the reservations)
 class ReservationManager {
 private:
 	vector<Reservation*> reservationList;
@@ -155,17 +156,17 @@ public:
 		fo.open("rezervacii.txt", ios::out | ios::app);
 		try {
 			if (!fo.is_open()) {
-				throw exception("Faila ne moje da se otvori.");
+				throw exception("The storage file could not be opened. Please try again later.");
 			}
 		}
 		catch (exception e) {
 			cout << "Error: " << e.what() << "\n";
 			return;
 		}
-		fo << "Ime: " << res->getGuestName() << "\n";
-		fo << "Data na nastanqvane: " << res->getCheckInDate() << "\n";
-		fo << "Data na napuskane: " << res->getCheckOutDate() << "\n";
-		fo << "Suma za plashtane: " << res->calculateCost() << " lv." << "\n";
+		fo << "Name: " << res->getGuestName() << "\n";
+		fo << "Check-in date: " << res->getCheckInDate() << "\n";
+		fo << "Check-out date: " << res->getCheckOutDate() << "\n";
+		fo << "Total Price: " << res->calculateCost() << " lv." << "\n";
 		fo << "\n";
 		fo.close();
 	}
@@ -177,7 +178,7 @@ public:
 
 	void listReservations() {
 		if (reservationList.empty()) {
-			cout << "Nqma nalichni rezervacii\n";
+			cout << "No reservations available for listing.\n";
 		}
 		else {
 			for (int i = 0; i < reservationList.size(); i++) {
@@ -189,11 +190,11 @@ public:
 	double processReservations() {
 		double totalCost = 0;
 		if (reservationList.empty()) {
-			cout << "Nqma nalichni rezervacii za obrabotka\n";
+			cout << "No reservations available for processing.\n";
 		}
 		else {
 			totalCost = reservationList[0]->calculateCost();
-			reservationList.erase(reservationList.begin());
+			reservationList.erase(reservationList.begin()); // Remove the first element
 		}
 		return totalCost;
 	}
@@ -220,7 +221,7 @@ int main() {
 
 	while (true) {
 		menu();
-		cout << "Izberete: ";
+		cout << "Choose an option(number): ";
 		cin >> choice;
 
 		switch (choice) {
@@ -231,16 +232,16 @@ int main() {
 			int room;
 			int nights;
 
-			cout << "Ime: ";
+			cout << "Name(First and Last): ";
 			cin.ignore();
 			getline(cin, guest);
-			cout << "Staq: ";
+			cout << "Room number(number): ";
 			cin >> room;
-			cout << "Dni prestoi: ";
+			cout << "How many days(number): ";
 			cin >> nights;
-			cout << "Data na nastanqvane(d.mm.YYYY): ";
+			cout << "Check-in date(d.mm.YYYY): ";
 			cin >> checkIn;
-			cout << "Data na napuskane(d.mm.YYYY): ";
+			cout << "Check-out date(d.mm.YYYY): ";
 			cin >> checkOut;
 
 			manager.addReservation(new StandardReservation(guest, checkIn, checkOut, room, nights));
@@ -253,16 +254,16 @@ int main() {
 			int room;
 			int nights;
 
-			cout << "Ime: ";
+			cout << "Name(First and Last): ";
 			cin.ignore();
 			getline(cin, vipGuest);
-			cout << "Staq: ";
+			cout << "Room number(number): ";
 			cin >> room;
-			cout << "Dni prestoi: ";
+			cout << "How many days(number): ";
 			cin >> nights;
-			cout << "Data na nastanqvane(d.mm.YYYY): ";
+			cout << "Check-in date(d.mm.YYYY): ";
 			cin >> checkIn;
-			cout << "Data na napuskane(d.mm.YYYY): ";
+			cout << "Check-out date(d.mm.YYYY): ";
 			cin >> checkOut;
 
 			manager.addReservation(new VipReservation(vipGuest, checkIn, checkOut, room, nights));
@@ -276,18 +277,18 @@ int main() {
 			int nights;
 			string bulstat;
 
-			cout << "Ime na firma: ";
+			cout << "Firm Name: ";
 			cin.ignore();
 			getline(cin, companyName);
-			cout << "Staq: ";
+			cout << "Room number(number): ";
 			cin >> room;
-			cout << "Dni prestoi: ";
+			cout << "How many days(number): ";
 			cin >> nights;
-			cout << "Data na nastanqvane(d.mm.YYYY): ";
+			cout << "Check-in date(d.mm.YYYY): ";
 			cin >> checkIn;
-			cout << "Data na napuskane(d.mm.YYYY): ";
+			cout << "Check-out date(d.mm.YYYY): ";
 			cin >> checkOut;
-			cout << "Bulstat(9 simvola): ";
+			cout << "Bulstat(9 digits): ";
 			cin >> bulstat;
 
 			manager.addReservation(new BusinessReservation(companyName, checkIn, checkOut, room, nights, bulstat));
@@ -300,16 +301,16 @@ int main() {
 		case 5: {
 			double totalCost = manager.processReservations();
 			if (totalCost > 0) {
-				cout << "Obshta daljima suma: " << totalCost << " lv." << "\n";
+				cout << "Total cost: " << totalCost << " lv.\n";
 			}
 			break;
 		}
 		case 0: {
-			cout << "Izhod ot programata.\n";
+			cout << "Everything is saved. Goodbye!\n";
 			return 0;
 		}
 		default: {
-			cout << "Nevaliden izbor. Molq, opitaite otnovo\n";
+			cout << "Invalid option. Please try again or contact the administrators.\n";
 			break;
 		}
 		}

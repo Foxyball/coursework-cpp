@@ -1,30 +1,15 @@
-Ime: Tarikati EOOD
-Data na nastanqvane: 8.12.2023
-Data na napuskane: 13.12.2023
-Suma za plashtane: 450
+Name: Hristo Sabev
+Check-in date: 14.12.2023
+Check-out date: 17.12.2023
+Total Price: 150 lv.
 
-Ime: Ivancho
-Data na nastanqvane: 8.12.2023
-Data na napuskane: 18.12.2023
-Suma za plashtane: 784
+Name: Hristo SabEv
+Check-in date: 14.12.2023
+Check-out date: 15.12.2023
+Total Price: 78.4 lv.
 
-Ime: Dimitar Spasov
-Data na nastanqvane: 8.12.2023
-Data na napuskane: 18.12.2023
-Suma za plashtane: 10
-
-Ime: EEOOOOOD
-Data na nastanqvane: dnes
-Data na napuskane: utre
-Suma za plashtane: 270
-
-Ime: Hristo Sabev
-Data na nastanqvane: 11.12.2023
-Data na napuskane: 16.12.2023
-Suma za plashtane: 250
-
-Ime: Hristo Sabev
-Data na nastanqvane: 11.12.2023
-Data na napuskane: 13.12.2023
-Suma za plashtane: 100 lv.
+Name: Dhstudio
+Check-in date: 14.12.2023
+Check-out date: 16.12.2023
+Total Price: 180 lv.
 
